@@ -12,11 +12,11 @@ module.exports = {
     themes: [
       {
         light: {
-          ...require("daisyui/src/colors/themes")["[data-theme=cmyk]"],
+          ...require("daisyui/src/colors/themes")["[data-theme=light]"],
           "--btn-text-case": "",
         },
         dark: {
-          ...require("daisyui/src/colors/themes")["[data-theme=dracula]"],
+          ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
           "--btn-text-case": "",
         }
       },

@@ -1,46 +1,54 @@
 import { useState } from "react";
 
-interface UseMutationState<T> {
-  loading: boolean;
+// request headers
+interface MutationOptions {
+  headers?: {
+    [key: string]: string;
+  }[];
+}
+
+// mutator function
+type Mutator = (formData: any) => void;
+
+// response data that is updated when the mutator is called.
+interface MutationState<T> {
   data: undefined | T;
+  loading: boolean;
   error: undefined | any;
 }
 
-type UseMutaionReturn<T> = [(formData: any) => void, UseMutationState<T>];
+type UseMutationResponse<T> = [Mutator, MutationState<T>];
 
-interface MutateOptions {
-  headers?: {
-    [key: string]: string
-  }[]
-}
-
-const useMutation = <T = any>(url: string, options: MutateOptions = {}): UseMutaionReturn<T> => {
-  const [state, setState] = useState<UseMutationState<T>>({
-    loading: false,
+export default function useMutation<U = any, T = any>(
+  url: string,
+  options: MutationOptions = {}
+): UseMutationResponse<T> {
+  const [state, setState] = useState<MutationState<T>>({
     data: undefined,
+    loading: false,
     error: undefined,
   });
 
-  async function mutator(formData: any) {
+  const mutator = async (formData: U) => {
     setState((prev) => ({ ...prev, loading: true }));
-    const headers = options.headers || {}
+    const headers = options.headers || {};
+
     try {
       const response = await fetch(url, {
         method: "POST",
         headers: {
-          ...headers,
           "Content-Type": "application/json",
+          "Accept": "application/json",
+          ...headers,
         },
         body: JSON.stringify(formData),
       });
       const json = await response.json();
-      setState((prev) => ({ ...prev, data: json, loading: false }));
-    } catch (error) {
-      setState((prev) => ({ ...prev, error, loading: false }));
+      setState((prev) => ({ ...prev, data: json }));
+    } catch (err) {
+      setState((prev) => ({ ...prev, error: err }));
     }
-  }
-
+    setState((prev) => ({ ...prev, loading: false }));
+  };
   return [mutator, state];
-};
-
-export default useMutation;
+}
