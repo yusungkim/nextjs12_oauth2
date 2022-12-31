@@ -1,6 +1,3 @@
-// 1. get access token from provider
-// 2. create new session using cookie
-
 import type { NextApiRequest, NextApiResponse } from "next";
 import withMethodGuard from "@lib/server/withMethodGuard";
 import { withApiSession } from "@lib/server/withSession";
