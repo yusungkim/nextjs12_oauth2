@@ -1,7 +1,7 @@
 import { ApiResponse } from '@lib/server/api'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import useMutation from '../../../lib/client/useMutation'
 import useUser from '@lib/client/useUser'
 
@@ -13,16 +13,16 @@ const OAuth: NextPage = () => {
 
   // 1. get and set access_token from github via backend
   useEffect(() => {
-    if (authorizationCode) {
-      console.log("get and set access token")
-      getAccessTokenFromGithub({ authorizationCode })
+    if (loading || !authorizationCode || accessTokenData) {
+      return
     }
-  }, [authorizationCode])
+    console.log("get and set access token")
+    getAccessTokenFromGithub({ authorizationCode })
+  }, [authorizationCode, loading, accessTokenData])
 
   // 2. get user info using access_token via backend
   const { user, isLoading } = useUser(()=>{
     console.log("get user info when 'access_token' is ready")
-    console.log("staus: ", Boolean(accessTokenData), accessTokenData)
     return Boolean(accessTokenData?.ok)
   })
 
