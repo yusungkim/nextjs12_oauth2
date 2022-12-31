@@ -13,9 +13,11 @@ module.exports = {
       {
         light: {
           ...require("daisyui/src/colors/themes")["[data-theme=cmyk]"],
+          "--btn-text-case": "",
         },
         dark: {
           ...require("daisyui/src/colors/themes")["[data-theme=dracula]"],
+          "--btn-text-case": "",
         }
       },
     ]
