@@ -19,7 +19,7 @@
 
 [oauth_google](https://github.com/yusungkim/nextjs12_oauth2/releases/tag/init_oauth_google)
 * oauth / useUser / github provider / google provider
-* signout
+* signout 
 
 ```bash
 # init
