@@ -1,5 +1,5 @@
 import '../styles/globals.css'
-import Layout from '../components/layout'
+import Layout from '@components/layout'
 import type { AppProps } from 'next/app'
 import Head from 'next/head';
 import { SWRConfig } from 'swr';

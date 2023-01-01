@@ -62,8 +62,6 @@ async function saveUserInSession(req: NextApiRequest, userInfo: UserInfo) {
   }
 }
 
-
-
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<UserResponse>
@@ -76,7 +74,6 @@ async function handler(
   if (user) {
     const { expiry, name, avatar_url } = user
     if (currentUnixTime() <= expiry) {
-      console.log("Valid User Info for", name)
       return res.status(200).json({
         ok: true, 
         user: { name, avatar_url }
@@ -90,7 +87,7 @@ async function handler(
 
   if (!auth?.access_token) {
     console.log("no access token")
-    return res.status(400).json({ok: false, message: "Authorization Failed. Try again."})
+    return res.status(404).json({ok: false, message: "You've been logged out."})
   }
 
   const { access_token, provider } = auth
@@ -107,7 +104,7 @@ async function handler(
     await saveUserInSession(req, {id, ...rest})
     return res.status(200).json({ok: true, user: rest})
   } catch (err) {
-    return res.status(400).json({ok: false, message: "Wrong auth provider."})
+    return res.status(500).json({ok: false, message: "Something happened during oauth"})
   }
 }
 

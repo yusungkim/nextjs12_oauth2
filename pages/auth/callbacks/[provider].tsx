@@ -2,7 +2,7 @@ import { ApiResponse } from '@lib/server/api'
 import type { NextPage } from 'next'
 import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
-import useMutation from '../../../lib/client/useMutation'
+import useMutation from '@lib/client/useMutation'
 import useUser from '@lib/client/useUser'
 import { OAuthParamForAccessCodeToBackend } from '@api/auth/oauth'
 
