@@ -1,43 +1,80 @@
-// 1. get access token from provider
+// 1. get access token from provider if there is no access_token provided.
 // 2. create new session using cookie
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import withMethodGuard from "@lib/server/withMethodGuard";
 import { withApiSession } from "@lib/server/withSession";
 import { ApiResponse } from "@lib/server/api";
+import { OAuthMap, oauthMap } from "@lib/server/oauth";
+
+const OAUTH_PROVIDERS = ["google", "github", "discord"]
+export function validProvider(provider: string) {
+  return OAUTH_PROVIDERS.includes(provider)
+}
+
+export interface OAuthParamForAccessCodeToBackend {
+  code: string
+  provider: string
+}
+
+interface OAuthParamForAccessCode {
+  client_id: string
+  client_secret: string
+  code: string
+  redirect_uri: string
+  grant_type?: string
+}
 
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
 ) {
-  const { authorizationCode } = req.body
+  const { provider, code } = req.body
 
-  if (!authorizationCode) {
+  if (!validProvider(provider)) {
+    return res.status(400).json({ ok: false, message: `Auth provider ${provider} is not allowed.`})
+  }
+
+  // codeでaccess_tokenを取得
+  if (!code) {
     return res.status(400).json({ ok: false, message: "No authorization code."})
   }
 
-  const formData = {
-    client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
-    client_secret: process.env.GITHUB_CLIENT_SECRET,
-    code: authorizationCode,
+  const oauthInfo = oauthMap[provider as keyof OAuthMap]
+
+  let formData: OAuthParamForAccessCode = {
+    client_id: oauthInfo.client_id,
+    client_secret: oauthInfo.client_secret,
+    redirect_uri: oauthInfo.redirect_uri,
+    code: code.toString(),
+  }
+
+  if (provider == "google") {
+    formData = {
+      ...formData,
+      grant_type: "authorization_code",
+    }
   }
 
   try {
-    // https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
-    const response = await fetch("https://github.com/login/oauth/access_token", {
+    const response = await fetch(oauthInfo.access_token_endpoint, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json, charset=utf-8",
         "Accept": "application/json",
       },
       body: JSON.stringify(formData),
     })
 
-    const {error, error_description, access_token} = await response.json();
+    const {
+      access_token, token_type, scope, // common success
+      error, error_description,       // github fails
+      expires_in, refresh_token       // google success
+    } = await response.json()
     
     if (access_token) {
       req.session.auth = {
-        provider: "github",
+        provider,
         access_token,
       }
       await req.session.save()
@@ -45,11 +82,11 @@ async function handler(
     }
 
     if (error) {
-      console.log(error_description)
+      console.log(error, error_description)
       return res.status(403).json({ ok: false, message: "Authorization Failed. Try again." })
     }
   } catch (err) {
-    console.log(err)
+    console.log("api/auth/oauth err: ", err)
     return res.status(500).json({ ok: false, message: "Authorization Failed. Try again." })
   }
 }

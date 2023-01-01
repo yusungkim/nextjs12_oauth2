@@ -1,14 +1,19 @@
 import { withIronSessionApiRoute, withIronSessionSsr } from "iron-session/next";
 import { NextApiHandler } from "next";
 
+export interface UserInfo {
+  id: string;               // email/test@example.com | github/31542457 | phone/+81-09012341234
+  name: string;
+  avatar_url: string | null;
+}
+
+interface UserInfoSession extends UserInfo {
+  expiry: number;
+}
+
 declare module "iron-session" {
   interface IronSessionData {
-    user?: {
-      id: string;               // email/test@example.com | github/31542457 | phone/+81-09012341234
-      name: string;
-      avatar_url: string | null;
-      expiry: number;
-    };
+    user?: UserInfoSession;
     auth?: {
       provider: string;           // github | google | email
       access_token: string | null;

@@ -1,35 +1,52 @@
 import { ApiResponse } from '@lib/server/api'
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useMutation from '../../../lib/client/useMutation'
 import useUser from '@lib/client/useUser'
+import { OAuthParamForAccessCodeToBackend } from '@api/auth/oauth'
+
+const getProviderAndCode = (router: NextRouter) => {
+  const provider = router.query.provider
+  let { code } = router.query
+
+  // extract code from asPath
+  if (code) {
+    const paramsString = router.asPath.split('?')[1]
+    const params: { [key: string]: string } = paramsString
+      .split('&')
+      .map((param) => param.split('='))
+      .reduce((acc, cur) => { return {...acc, [cur[0]]: cur[1]}}, {})
+    code = params.code
+  }
+
+  // URL encoded character to normal symbol, to surpress "Malformed auth code."
+  code = code?.replaceAll("%2F", "/")
+
+  return { provider, code }
+}
 
 const OAuth: NextPage = () => {
   const router = useRouter()
-  const authorizationCode = router.query.code
 
-  const [getAccessTokenFromGithub, {data: accessTokenData, loading}] = useMutation<{authorizationCode: string}, ApiResponse>("/api/auth/oauth")
+  const [exchangeAccessToken, {data: accessTokenData, loading, error}] = useMutation<OAuthParamForAccessCodeToBackend, ApiResponse>("/api/auth/oauth")
 
   // 1. get and set access_token from github via backend
   useEffect(() => {
-    if (loading || !authorizationCode || accessTokenData) {
+    if (loading || accessTokenData?.ok || !router.query.provider || error) {
       return
     }
-    console.log("get and set access token")
-    getAccessTokenFromGithub({ authorizationCode })
-  }, [authorizationCode, loading, accessTokenData])
+    exchangeAccessToken(getProviderAndCode(router))
+  }, [router, loading, accessTokenData, error])
 
   // 2. get user info using access_token via backend
   const { user, isLoading } = useUser(()=>{
-    console.log("get user info when 'access_token' is ready")
     return Boolean(accessTokenData?.ok)
   })
 
   // 3. redirect to root
   useEffect(()=>{
     if(user) {
-      console.log("jump to root")
       router.replace("/")
     }
   }, [user, router, isLoading])
