@@ -1,5 +1,5 @@
 import Icon from '@components/icon'
-import { oauthUrl } from '@lib/server/oauth';
+import { oauthUrl } from '@lib/client/oauth';
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 

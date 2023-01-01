@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+
+  // to check foreign key exist
+  relationMode = "prisma"
+}
+
+model User {
+  id         String   @id // email/test@example.com | github/31542457 | phone/+81-09012341234
+  name       String
+  nickname   String?  @unique
+  avatar_url String?  @db.VarChar(255)
+  tokens     Token[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  payload   String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum Action {
+  Signup
+  Signin
+  Signout
+}
+
+model ActionLog {
+  id        Int      @id @default(autoincrement())
+  action    Action
+  detail    Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -4,7 +4,11 @@ import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useMutation from '@lib/client/useMutation'
 import useUser from '@lib/client/useUser'
-import { OAuthParamForAccessCodeToBackend } from '@api/auth/oauth'
+
+interface OAuthParamForAccessCodeToBackend {
+  code: string
+  provider: string
+}
 
 const getProviderAndCode = (router: NextRouter) => {
   const provider = router.query.provider

@@ -1,51 +1,80 @@
-import { v4 as uuidv4 } from 'uuid'
-
-const redirectHostUrl = "http://localhost:3000/auth/callbacks"
-
-// for authorization code
-interface OAuthForCode {
-  endpoint: string
-  client_id: string
-  redirect_uri: string
-  scope: string
-  additionals?: string
-}
+import { UserInfo } from './withSession'
+import dbClient from './db'
+import { OAuthCommon, oauthCommonMap } from "@lib/common/oauth"
 
 // for access token exchange
-interface OAuthForAccessToken {
-  client_id: string
+interface OAuthForAccessToken extends OAuthCommon {
   client_secret: string
   access_token_endpoint: string
 }
 
-export interface OAuthMap {
-  github: OAuthForCode & OAuthForAccessToken
-  google: OAuthForCode & OAuthForAccessToken
+export interface OAuthMapForToken {
+  github: OAuthForAccessToken
+  google: OAuthForAccessToken
 }
 
-export const oauthMap: OAuthMap = {
+export const oauthMapForToken: OAuthMapForToken = {
   github: {
-    // doc: "https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps",
-    endpoint: "https://github.com/login/oauth/authorize",
-    client_id: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID!,
-    redirect_uri: `${redirectHostUrl}/github`,
-    scope: "read:user",
+    ...oauthCommonMap.github,
     access_token_endpoint: "https://github.com/login/oauth/access_token",
     client_secret: process.env.GITHUB_CLIENT_SECRET!,
   },
   google: {
-    // doc: "https://developers.google.com/identity/protocols/oauth2/web-server#httprest_1",
-    endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
-    client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
-    redirect_uri: `${redirectHostUrl}/google`,
-    scope: "https://www.googleapis.com/auth/userinfo.profile",
-    additionals: "&response_type=code&include_granted_scopes=true&access_type=offline", // response_type can be token or code
+    ...oauthCommonMap.google,
     access_token_endpoint: "https://oauth2.googleapis.com/token",
     client_secret: process.env.GOOGLE_CLIENT_SECRET!,
   },
 }
 
-export const oauthUrl = (provider: keyof OAuthMap) => {
-  const {endpoint, client_id, redirect_uri, scope, additionals} = oauthMap[provider]
-  return `${endpoint}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${uuidv4()}${additionals || ""}`
+const InfoUrls: {[key: string]: string} = {
+  google: "https://www.googleapis.com/oauth2/v1/userinfo",
+  github: "https://api.github.com/user"
+}
+
+const constructUserInfo = (info: {[key: string]: any}, provider: keyof OAuthMapForToken): UserInfo => {
+  const userInfo = {
+    id: `${provider}/${info.id || info.email || info.phone}`,
+    name: info.name,
+    avatar_url: info.avatar_url,
+  }
+
+  switch (provider) {
+    case "google":
+      // id, email, verified_email, name, given_name, family_name, picture, locale
+      return { 
+        ...userInfo,
+        avatar_url: info.picture
+      }
+
+    case "github":
+      break;
+
+    default:
+      break;
+  }
+  return userInfo
+}
+
+export const fetchUserInfoFromProvider = async (provider: keyof OAuthMapForToken, access_token: string) => {
+  const infoFromProvider = await (await fetch(InfoUrls[provider], {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+      Accept: "application/json",
+    }
+  })).json();
+
+  return constructUserInfo(infoFromProvider, provider)
+}
+
+export const registerIfNewUser = async (userInfo: UserInfo) => {
+  const user = await dbClient?.user.findUnique({
+    where: {
+      id: userInfo.id
+    }
+  })
+  if (!user) {
+    await dbClient?.user.create({
+      data: userInfo
+    })
+  }
 }

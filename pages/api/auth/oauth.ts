@@ -5,16 +5,11 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import withMethodGuard from "@lib/server/withMethodGuard";
 import { withApiSession } from "@lib/server/withSession";
 import { ApiResponse } from "@lib/server/api";
-import { OAuthMap, oauthMap } from "@lib/server/oauth";
+import { fetchUserInfoFromProvider, oauthMapForToken, OAuthMapForToken, registerIfNewUser } from "@lib/server/oauth";
 
 const OAUTH_PROVIDERS = ["google", "github", "discord"]
 export function validProvider(provider: string) {
   return OAUTH_PROVIDERS.includes(provider)
-}
-
-export interface OAuthParamForAccessCodeToBackend {
-  code: string
-  provider: string
 }
 
 interface OAuthParamForAccessCode {
@@ -40,7 +35,7 @@ async function handler(
     return res.status(400).json({ ok: false, message: "No authorization code."})
   }
 
-  const oauthInfo = oauthMap[provider as keyof OAuthMap]
+  const oauthInfo = oauthMapForToken[provider as keyof OAuthMapForToken]
 
   let formData: OAuthParamForAccessCode = {
     client_id: oauthInfo.client_id,
@@ -73,11 +68,18 @@ async function handler(
     } = await response.json()
     
     if (access_token) {
+      // save in session
       req.session.auth = {
         provider,
         access_token,
       }
       await req.session.save()
+
+      // register if new user
+      const userInfo = await fetchUserInfoFromProvider(provider, access_token)
+      await registerIfNewUser(userInfo)
+
+      // end response
       return res.status(200).json({ ok: true })
     }
 
