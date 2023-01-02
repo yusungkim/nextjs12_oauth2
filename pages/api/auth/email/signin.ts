@@ -3,6 +3,7 @@ import withMethodGuard from "@lib/server/withMethodGuard"
 import { withApiSession } from "@lib/server/withSession"
 import { ApiResponse } from "@lib/server/api"
 import dbClient from "@lib/server/db"
+import { createToken } from "@lib/server/utils"
 
 async function handler(
   req: NextApiRequest,
@@ -17,7 +18,7 @@ async function handler(
   const safeName = name.toString().trim()
   const safeEmail = email.toString().trim()
   const id = `email/${safeEmail}`
-  const payload = Math.floor(100_000 + Math.random() * 900_000) + ""
+  const payload = createToken("email")
 
   await dbClient?.token.create({
     data: {
@@ -29,8 +30,7 @@ async function handler(
           },
           create: {
             id,
-            name: safeName,
-            nickname: safeName
+            name: safeName
           }
         }
       }
@@ -38,6 +38,7 @@ async function handler(
   })
 
   return res.status(200).json({ ok: true })
+  return res.status(200).json({ ok: false, message: "This user does not exist." })
 }
 
 // get and post, both ok.

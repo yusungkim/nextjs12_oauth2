@@ -1,10 +1,10 @@
+import Head from 'next/head'
+import { SWRConfig } from 'swr'
 import '../styles/globals.css'
-import Layout from '@components/layout'
 import type { AppProps } from 'next/app'
-import Head from 'next/head';
-import { SWRConfig } from 'swr';
+import Layout from '@components/layout'
 
-const fetcher = (url: string) => fetch(url).then((response) => response.json());
+const fetcher = (url: string) => fetch(url).then((response) => response.json())
 
 function MyApp({ Component, pageProps }: AppProps) {
   return <Layout>
@@ -19,4 +19,4 @@ function MyApp({ Component, pageProps }: AppProps) {
   </Layout>
 }
 
-export default MyApp;
+export default MyApp

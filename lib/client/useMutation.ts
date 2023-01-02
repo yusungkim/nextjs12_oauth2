@@ -11,7 +11,7 @@ interface MutationOptions {
 type Mutator = (formData: any) => void
 
 // response data that is updated when the mutator is called.
-interface MutationState<ReturnType> {
+export interface MutationState<ReturnType> {
   data: undefined | ReturnType
   loading: boolean
   error: undefined | any

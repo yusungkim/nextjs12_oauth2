@@ -1,4 +1,4 @@
-import { NextComponentType, NextPageContext } from "next"
+import { NFC } from "./component"
 
 export type IconName =
   | "arrow-long-right"
@@ -14,7 +14,7 @@ interface IconProps {
   fill?: string
   stroke?: string
 }
-const Icon: NextComponentType<NextPageContext, {}, IconProps> = ({
+const Icon: NFC<IconProps> = ({
   name = "github",
   size = "M",
   fill = "currentColor",

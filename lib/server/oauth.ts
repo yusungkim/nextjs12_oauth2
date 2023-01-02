@@ -26,12 +26,12 @@ export const oauthMapForToken: OAuthMapForToken = {
   },
 }
 
-const InfoUrls: {[key: string]: string} = {
+const InfoUrls: { [key: string]: string } = {
   google: "https://www.googleapis.com/oauth2/v1/userinfo",
   github: "https://api.github.com/user"
 }
 
-const constructUserInfo = (info: {[key: string]: any}, provider: keyof OAuthMapForToken): UserInfo => {
+const constructUserInfo = (info: { [key: string]: any }, provider: keyof OAuthMapForToken): UserInfo => {
   const userInfo = {
     id: `${provider}/${info.id || info.email || info.phone}`,
     name: info.name,
@@ -41,16 +41,16 @@ const constructUserInfo = (info: {[key: string]: any}, provider: keyof OAuthMapF
   switch (provider) {
     case "google":
       // id, email, verified_email, name, given_name, family_name, picture, locale
-      return { 
+      return {
         ...userInfo,
         avatar_url: info.picture
       }
 
     case "github":
-      break;
+      break
 
     default:
-      break;
+      break
   }
   return userInfo
 }
@@ -61,7 +61,7 @@ export const fetchUserInfoFromProvider = async (provider: keyof OAuthMapForToken
       Authorization: `Bearer ${access_token}`,
       Accept: "application/json",
     }
-  })).json();
+  })).json()
 
   return constructUserInfo(infoFromProvider, provider)
 }
@@ -74,7 +74,10 @@ export const registerIfNewUser = async (userInfo: UserInfo) => {
   })
   if (!user) {
     await dbClient?.user.create({
-      data: userInfo
+      data: {
+        ...userInfo,
+        verified: true,
+      }
     })
   }
 }

@@ -1,8 +1,8 @@
-import Icon from '@components/icon'
-import { oauthUrl } from '@lib/client/oauth'
 import { useRouter } from "next/router"
 import { ReactNode } from "react"
-import { NextComponentType, NextPageContext } from "next"
+import { oauthUrl } from '@lib/client/oauth'
+import { NFC } from '@components/component'
+import Icon from "@components/Icon"
 
 
 interface OAuthButtonProps {
@@ -10,7 +10,7 @@ interface OAuthButtonProps {
   readonly children: ReactNode
 }
 
-const OAuthButton: NextComponentType<NextPageContext, {}, OAuthButtonProps> = ({
+const OAuthButton: NFC<OAuthButtonProps> = ({
   url = "",
   children
 }) => {
@@ -23,7 +23,7 @@ const OAuthButton: NextComponentType<NextPageContext, {}, OAuthButtonProps> = ({
 }
 
 // https://docs.github.com/en/developers/apps/building-oauth-apps/authorizing-oauth-apps
-export const OAuthGithubButton: NextComponentType<NextPageContext, {}, {}> = () => {
+export const OAuthGithubButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("github")}>
       <Icon name="github" fill="white" />
@@ -36,7 +36,7 @@ export const OAuthGithubButton: NextComponentType<NextPageContext, {}, {}> = () 
 }
 
 // https://developers.google.com/identity/protocols/oauth2/web-server#httprest_1
-export const OAuthGoogleButton: NextComponentType<NextPageContext, {}, {}> = () => {
+export const OAuthGoogleButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("google")}>
       <Icon name="google" fill="white" />
