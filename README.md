@@ -51,7 +51,7 @@ yarn add -D @prisma/client
 yarn prisma init --datasource-provider mysql
 
 # migration
-yarn prisma migrate dev --name init
+yarn prisma migrate dev --name addUser
 
 # force update db schema
 yarn prisma db push

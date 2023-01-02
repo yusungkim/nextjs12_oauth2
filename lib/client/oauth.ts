@@ -26,6 +26,6 @@ export const oauthMapForCode: OAuthMapForCode = {
 }
 
 export const oauthUrl = (provider: keyof OAuthMapForCode) => {
-  const {endpoint, client_id, redirect_uri, scope, additionals} = oauthMapForCode[provider]
+  const { endpoint, client_id, redirect_uri, scope, additionals } = oauthMapForCode[provider]
   return `${endpoint}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${uuidv4()}${additionals || ""}`
 }

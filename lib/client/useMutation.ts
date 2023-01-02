@@ -1,37 +1,37 @@
-import { useState } from "react";
+import { useState } from "react"
 
 // request headers
 interface MutationOptions {
   headers?: {
-    [key: string]: string;
-  }[];
+    [key: string]: string
+  }[]
 }
 
 // mutator function
-type Mutator = (formData: any) => void;
+type Mutator = (formData: any) => void
 
 // response data that is updated when the mutator is called.
-interface MutationState<T> {
-  data: undefined | T;
-  loading: boolean;
-  error: undefined | any;
+interface MutationState<ReturnType> {
+  data: undefined | ReturnType
+  loading: boolean
+  error: undefined | any
 }
 
-type UseMutationResponse<T> = [Mutator, MutationState<T>];
+type UseMutationResponse<ReturnType> = [Mutator, MutationState<ReturnType>]
 
-export default function useMutation<U = any, T = any>(
+export default function useMutation<InputFormType = any, ReturnType = any>(
   url: string,
   options: MutationOptions = {}
-): UseMutationResponse<T> {
-  const [state, setState] = useState<MutationState<T>>({
+): UseMutationResponse<ReturnType> {
+  const [state, setState] = useState<MutationState<ReturnType>>({
     data: undefined,
     loading: false,
     error: undefined,
-  });
+  })
 
-  const mutator = async (formData: U) => {
-    setState((prev) => ({ ...prev, loading: true }));
-    const headers = options.headers || {};
+  const mutator = async (formData: InputFormType) => {
+    setState((prev) => ({ ...prev, loading: true }))
+    const headers = options.headers || {}
 
     try {
       const response = await fetch(url, {
@@ -42,13 +42,13 @@ export default function useMutation<U = any, T = any>(
           ...headers,
         },
         body: JSON.stringify(formData),
-      });
-      const json = await response.json();
-      setState((prev) => ({ ...prev, data: json }));
+      })
+      const json = await response.json()
+      setState((prev) => ({ ...prev, data: json }))
     } catch (err) {
-      setState((prev) => ({ ...prev, error: err }));
+      setState((prev) => ({ ...prev, error: err }))
     }
-    setState((prev) => ({ ...prev, loading: false }));
-  };
-  return [mutator, state];
+    setState((prev) => ({ ...prev, loading: false }))
+  }
+  return [mutator, state]
 }

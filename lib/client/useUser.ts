@@ -1,13 +1,14 @@
-import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { UserResponse } from "@api/auth/me";
 
+export interface User {
+  name: string;
+  avatar_url: string | null;
+}
+
 interface UseUserState {
   isLoading: boolean;
-  user?: {
-    name: string;
-    avatar_url: string | null;
-  }
+  user?: User
 }
 
 type TriggerFetch = () => Boolean
