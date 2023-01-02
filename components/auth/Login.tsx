@@ -1,21 +1,18 @@
 import { NFC } from "@components/component"
-import EmailSignupCard from './EmailSignupCard'
-import EmailSigninCard from './EmailSigninCard'
+import EmailSignupCard, { SignType } from './EmailSignupCard'
 import { OAuthGithubButton, OAuthGoogleButton } from './OAuthButton'
 
 const Login: NFC = () => {
-  const signup = true
+  const signType: SignType = "signup"
+
   return (
     <>
       <h1 className="text-3xl font-semibold text-center">
-        {signup ? "Join with" : "Login to"} {process.env.NEXT_PUBLIC_APP_NAME}</h1>
+        {signType == "signup" ? "Join" : "Login to"} {process.env.NEXT_PUBLIC_APP_NAME}</h1>
       <div className="grid overflow-hidden card rounded-box place-items-center">
         <div className="flex-col lg:flex-row-reverse w-full">
           <div className="card w-full my-4 bg-base-200">
-            {signup
-              ? <EmailSignupCard />
-              : <EmailSigninCard />
-            }
+            <EmailSignupCard signType={signType} />
           </div>
         </div>
       </div>

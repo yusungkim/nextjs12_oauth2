@@ -1,0 +1,1 @@
+export type LevelClass = "primary" | "secondary" | "info" | "warning" | "error" | "accent" | "success"

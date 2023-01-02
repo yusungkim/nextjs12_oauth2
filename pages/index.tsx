@@ -1,4 +1,4 @@
-import Login from '@components/auth/login'
+import Login from '@components/auth/Login'
 import SignoutButton from '@components/auth/SignoutButton'
 import useUser, { User } from '@lib/client/useUser'
 import type { NextPage, NextComponentType, NextPageContext } from 'next'

@@ -2,10 +2,10 @@
 
 ## Feature
 
-* Login using OAuth2.0 and save access_token in session
-* Get User info from github with access_token
-* Save user info to session
-* Reuse user info from the session within short amount of period (60sec)
+* Login using OAuth2.0 via github and google
+* Get User info from github/google with access_token
+* use cookie session for storing access_token (long expiry) and user_info (short expiry)
+* email login without password via sendgrid
 
 ## Branch Tags history
 
