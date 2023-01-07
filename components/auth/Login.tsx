@@ -1,6 +1,6 @@
 import { NFC } from "@components/component"
 import EmailSignupCard, { SignType } from './EmailSignupCard'
-import { OAuthGithubButton, OAuthGoogleButton } from './OAuthButton'
+import { OAuthGithubButton, OAuthGoogleButton, OAuthLineButton } from './OAuthButton'
 
 const Login: NFC = () => {
   const signType: SignType = "signup"
@@ -20,6 +20,7 @@ const Login: NFC = () => {
       <div className="grid min-h-min w-full gap-3 place-items-center my-4">
         <OAuthGithubButton />
         <OAuthGoogleButton />
+        <OAuthLineButton />
       </div>
     </>
   )

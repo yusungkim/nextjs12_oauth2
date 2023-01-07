@@ -17,8 +17,6 @@ async function handler(
 ) {
   const { name, email, signType } = req.body
 
-  console.log(signType)
-
   if (!email) {
     return res.status(400).json({ ok: false, message: "Email is required." })
   }
@@ -33,7 +31,6 @@ async function handler(
   const payload = createToken("email")
 
   if (signType == "signup") {
-    console.log("signup")
     try {
       await dbClient?.token.create({
         data: {
@@ -89,7 +86,7 @@ async function handler(
     html: loginHtmlText(
       process.env.APP_NAME,
       safeName,
-      `http://localhost:3000/auth/callbacks/confirm?token=${payload}`
+      `http://localhost:3000/auth/callback/confirm?token=${payload}`
     ),
   })
 

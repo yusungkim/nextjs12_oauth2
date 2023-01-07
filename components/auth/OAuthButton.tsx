@@ -2,8 +2,7 @@ import { useRouter } from "next/router"
 import { ReactNode } from "react"
 import { oauthUrl } from '@lib/client/oauth'
 import { NFC } from '@components/component'
-import Icon from "@components/Icon"
-
+import Icon from "@components/icon"
 
 interface OAuthButtonProps {
   url: string
@@ -42,6 +41,32 @@ export const OAuthGoogleButton: NFC = () => {
       <Icon name="google" fill="white" />
       <div className="flex items-center gap-1 justify-center">
         <span className="text-lg">Login with Google</span>
+        <Icon name="arrow-long-right" size="S" />
+      </div>
+    </OAuthButton>
+  )
+}
+
+// // https://developers.weixin.qq.com/doc/oplatform/en/Website_App/WeChat_Login/Wechat_Login.html
+// export const OAuthWechatButton: NFC = () => {
+//   return (
+//     <OAuthButton url={oauthUrl("wechat")}>
+//       <Icon name="wechat" />
+//       <div className="flex items-center gap-1 justify-center">
+//         <span className="text-lg">Login with WeChat</span>
+//         <Icon name="arrow-long-right" size="S" />
+//       </div>
+//     </OAuthButton>
+//   )
+// }
+
+// https://developers.line.biz/en/docs/line-login/integrate-line-login/#create-a-channel
+export const OAuthLineButton: NFC = () => {
+  return (
+    <OAuthButton url={oauthUrl("line")}>
+      <Icon name="line" />
+      <div className="flex items-center gap-1 justify-center">
+        <span className="text-lg">Login with WeChat</span>
         <Icon name="arrow-long-right" size="S" />
       </div>
     </OAuthButton>

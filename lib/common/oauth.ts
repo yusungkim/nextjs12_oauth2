@@ -7,9 +7,10 @@ export interface OAuthCommon {
 interface OAuthCommonMap {
   github: OAuthCommon
   google: OAuthCommon
+  line: OAuthCommon
 }
 
-const redirectHostUrl = "http://localhost:3000/auth/callbacks"
+const redirectHostUrl = "http://localhost:3000/auth/callback"
 
 export const oauthCommonMap: OAuthCommonMap = {
   github: {
@@ -21,5 +22,10 @@ export const oauthCommonMap: OAuthCommonMap = {
     // doc: "https://developers.google.com/identity/protocols/oauth2/web-server#httprest_1",
     client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
     redirect_uri: `${redirectHostUrl}/google`,
+  },
+  line: {
+    // doc: "https://developers.line.biz/en/docs/line-login/integrate-line-login/#create-a-channel",
+    client_id: process.env.NEXT_PUBLIC_LINE_CLIENT_ID!,
+    redirect_uri: `${redirectHostUrl}/line`,
   },
 }

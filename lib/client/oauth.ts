@@ -10,6 +10,7 @@ export interface OAuthForCode extends OAuthCommon {
 export interface OAuthMapForCode {
   github: OAuthForCode
   google: OAuthForCode
+  line: OAuthForCode
 }
 export const oauthMapForCode: OAuthMapForCode = {
   github: {
@@ -21,11 +22,18 @@ export const oauthMapForCode: OAuthMapForCode = {
     ...oauthCommonMap.google,
     endpoint: "https://accounts.google.com/o/oauth2/v2/auth",
     scope: "https://www.googleapis.com/auth/userinfo.profile",
-    additionals: "&response_type=code&include_granted_scopes=true&access_type=offline", // response_type can be token or code
+    additionals: "&include_granted_scopes=true&access_type=offline", // response_type can be token or code
+  },
+  line: {
+    ...oauthCommonMap.line,
+    endpoint: "https://access.line.me/oauth2/v2.1/authorize",
+    scope: "profile openid",
+    additionals: "",
   },
 }
 
 export const oauthUrl = (provider: keyof OAuthMapForCode) => {
   const { endpoint, client_id, redirect_uri, scope, additionals } = oauthMapForCode[provider]
-  return `${endpoint}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&state=${uuidv4()}${additionals || ""}`
+  const url = `${endpoint}?client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scope}&response_type=code&state=${uuidv4()}}&nonce=${uuidv4()}${additionals || ""}`
+  return url
 }
