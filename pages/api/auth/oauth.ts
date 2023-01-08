@@ -7,9 +7,13 @@ import { withApiSession } from "@lib/server/withSession";
 import { ApiResponse } from "@lib/server/api";
 import { fetchUserInfoFromProvider, oauthMapForToken, OAuthMapForToken, registerIfNewUser } from "@lib/server/oauth";
 
-const OAUTH_PROVIDERS = ["google", "github", "line", "discord"]
+export const OAUTH_PROVIDERS = ["google", "github", "line", "discord", "facebook"]
 export function validProvider(provider: string) {
-  return OAUTH_PROVIDERS.includes(provider)
+  const isValid = OAUTH_PROVIDERS.includes(provider)
+  if (!isValid) {
+    console.log("Not valid provider: ", provider)
+  }
+  return isValid
 }
 
 interface OAuthParamForAccessCode {
@@ -69,7 +73,7 @@ async function handler(
 
   try {
     const response =
-      provider == "line"
+      ["line", "facebook"].includes(provider)
         ? await fetchWithFormUrlEncoded(oauthInfo.access_token_endpoint, headers, formData)
         : await fetch(oauthInfo.access_token_endpoint, {
           method: "POST",
@@ -84,7 +88,6 @@ async function handler(
 
     if (access_token) {
       // save in session
-      console.log("access_token:", access_token)
       req.session.auth = {
         provider,
         access_token,
@@ -100,7 +103,7 @@ async function handler(
     }
 
     if (error) {
-      console.log(error, error_description)
+      console.log("called /api/oauth: ", error, error_description)
       return res.status(403).json({ ok: false, message: "Authorization Failed. Try again." })
     }
   } catch (err) {

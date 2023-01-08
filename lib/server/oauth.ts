@@ -13,6 +13,7 @@ export interface OAuthMapForToken {
   github: OAuthForAccessToken
   google: OAuthForAccessToken
   line: OAuthForAccessToken
+  facebook: OAuthForAccessToken
 }
 
 export const oauthMapForToken: OAuthMapForToken = {
@@ -31,6 +32,11 @@ export const oauthMapForToken: OAuthMapForToken = {
     access_token_endpoint: "https://api.line.me/oauth2/v2.1/token",
     client_secret: process.env.LINE_CLIENT_SECRET!,
   },
+  facebook: {
+    ...oauthCommonMap.facebook,
+    access_token_endpoint: "https://graph.facebook.com/v15.0/oauth/access_token",
+    client_secret: process.env.FACEBOOK_CLIENT_SECRET!,
+  },
 }
 
 // Get profile information from an ID token
@@ -38,6 +44,7 @@ const InfoUrls: { [key: string]: string } = {
   google: "https://www.googleapis.com/oauth2/v1/userinfo",
   github: "https://api.github.com/user",
   line: "https://api.line.me/oauth2/v2.1/userinfo",
+  facebook: "https://graph.facebook.com/me",
 }
 
 const constructUserInfo = (info: { [key: string]: any }, provider: keyof OAuthMapForToken): UserInfo => {
@@ -64,6 +71,14 @@ const constructUserInfo = (info: { [key: string]: any }, provider: keyof OAuthMa
         ...userInfo,
         id: `${provider}/${info.sub}`,
       }
+    
+    case "facebook":
+      return {
+        ...userInfo,
+      }
+
+    default:
+      return userInfo
   }
 }
 

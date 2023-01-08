@@ -11,6 +11,7 @@ export interface OAuthMapForCode {
   github: OAuthForCode
   google: OAuthForCode
   line: OAuthForCode
+  facebook: OAuthForCode
 }
 export const oauthMapForCode: OAuthMapForCode = {
   github: {
@@ -28,6 +29,12 @@ export const oauthMapForCode: OAuthMapForCode = {
     ...oauthCommonMap.line,
     endpoint: "https://access.line.me/oauth2/v2.1/authorize",
     scope: "profile openid",
+    additionals: "",
+  },
+  facebook: {
+    ...oauthCommonMap.facebook,
+    endpoint: "https://www.facebook.com/v15.0/dialog/oauth",
+    scope: "public_profile",
     additionals: "",
   },
 }

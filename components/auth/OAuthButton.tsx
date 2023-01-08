@@ -16,7 +16,12 @@ const OAuthButton: NFC<OAuthButtonProps> = ({
   const router = useRouter()
   return (
     <button onClick={() => router.push(url)} className="btn btn-primary gap-2 w-3/4 hover:btn-success">
-      {children}
+      <div className="flex justify-between items-center px-3 w-full">
+        <div className="flex gap-3">
+          {children}
+        </div>
+        <Icon name="arrow-long-right" size="S" />
+      </div>
     </button>
   )
 }
@@ -26,10 +31,7 @@ export const OAuthGithubButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("github")}>
       <Icon name="github" fill="white" />
-      <div className="flex items-center gap-1 justify-center">
-        <span className="text-lg">Login with Github</span>
-        <Icon name="arrow-long-right" size="S" />
-      </div>
+      <span className="text-lg">Login with Github</span>
     </OAuthButton>
   )
 }
@@ -39,10 +41,7 @@ export const OAuthGoogleButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("google")}>
       <Icon name="google" fill="white" />
-      <div className="flex items-center gap-1 justify-center">
-        <span className="text-lg">Login with Google</span>
-        <Icon name="arrow-long-right" size="S" />
-      </div>
+      <span className="text-lg">Login with Google</span>
     </OAuthButton>
   )
 }
@@ -52,10 +51,7 @@ export const OAuthGoogleButton: NFC = () => {
 //   return (
 //     <OAuthButton url={oauthUrl("wechat")}>
 //       <Icon name="wechat" />
-//       <div className="flex items-center gap-1 justify-center">
-//         <span className="text-lg">Login with WeChat</span>
-//         <Icon name="arrow-long-right" size="S" />
-//       </div>
+//       <Icon name="arrow-long-right" size="S" />
 //     </OAuthButton>
 //   )
 // }
@@ -65,10 +61,17 @@ export const OAuthLineButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("line")}>
       <Icon name="line" />
-      <div className="flex items-center gap-1 justify-center">
-        <span className="text-lg">Login with WeChat</span>
-        <Icon name="arrow-long-right" size="S" />
-      </div>
+      <span className="text-lg">Login with WeChat</span>
+    </OAuthButton>
+  )
+}
+
+// https://developers.facebook.com/docs/facebook-login/guides/advanced/manual-flow/
+export const OAuthFacebookButton: NFC = () => {
+  return (
+    <OAuthButton url={oauthUrl("facebook")}>
+      <Icon name="facebook" />
+      <span className="text-lg">Login with Facebook</span>
     </OAuthButton>
   )
 }
