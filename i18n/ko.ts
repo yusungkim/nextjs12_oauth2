@@ -7,6 +7,23 @@ const ko = {
     LANGUAGE: "언어",
     DEV_SCHEDULE: "개발일정"
   },
+  PAGE: {
+    ROOT: {
+      TITLE: "Welcome"
+    },
+    PROFILE: {
+      TITLE: "프로필",
+    },
+    LOGIN: {
+      TITLE: "로그인",
+    },
+    JOIN: {
+      TITLE: "Join",
+    },
+    RECIPE: {
+      TITLE: "레시피",
+    },
+  },
   API: {
     AUTH: {
       EMAIL: {

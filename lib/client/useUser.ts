@@ -1,5 +1,7 @@
 import useSWR from "swr";
 import { UserResponse } from "@api/auth/me";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export interface User {
   name: string;
@@ -12,12 +14,27 @@ interface UseUserState {
 }
 
 type TriggerFetch = () => Boolean
+interface UseUserProps {
+  triggerFetch?: TriggerFetch,
+  privatePage?: boolean,
+}
 
-const useUser = (triggerFetch: TriggerFetch = ()=>{ return true }): UseUserState => {
+const useUser = ({
+  triggerFetch = () => { return true },
+  privatePage = false,
+}: UseUserProps): UseUserState => {
 
-  const { data, isLoading } = useSWR<UserResponse>( triggerFetch() ? '/api/auth/me' : null);
+  const { data, isLoading } = useSWR<UserResponse>(triggerFetch() ? '/api/auth/me' : null);
 
-  return { isLoading, user: data?.user}
+  const { push } = useRouter()
+
+  useEffect(() => {
+    if (privatePage && data && !data.ok) {
+      push("/login")
+    }
+  }, [data, privatePage, push])
+
+  return { isLoading, user: data?.user }
 };
 
 export default useUser;

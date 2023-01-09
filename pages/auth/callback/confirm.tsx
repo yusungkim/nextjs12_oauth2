@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useMutation from '@lib/client/useMutation'
 import useUser from '@lib/client/useUser'
+import Layout from '@components/layout/Layout'
 
 interface ConfirmTokenForm {
   token: string
@@ -14,9 +15,7 @@ const Confirm: NextPage = () => {
 
   const [confirm, { data, loading }] = useMutation<ConfirmTokenForm, ApiResponse>("/api/auth/email/confirm")
 
-  const { user } = useUser(() => {
-    return Boolean(data?.ok)
-  })
+  const { user } = useUser({ triggerFetch: () => Boolean(data?.ok) })
 
   useEffect(() => {
     if (router.isReady) {
@@ -33,22 +32,24 @@ const Confirm: NextPage = () => {
   }, [user, router])
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="text-3xl font-semibold text-center flex flex-col gap-4 justify-center items-center">
-        {(loading || data?.ok)
-          ? (
-            <>
-              <p>{loading ? "Authorizing... " : "Login success."}</p>
-              <progress className="progress w-full"></progress>
-              <p className="font-normal text-xl">Do not refresh the page.</p>
-            </>
-          )
-          : (
-            <p>Login failed. Try again.</p>
-          )
-        }
+    <Layout pageTitle='Confirm'>
+      <div className="flex flex-col w-full">
+        <div className="text-3xl font-semibold text-center flex flex-col gap-4 justify-center items-center">
+          {(loading || data?.ok)
+            ? (
+              <>
+                <p>{loading ? "Authorizing... " : "Login success."}</p>
+                <progress className="progress w-full"></progress>
+                <p className="font-normal text-xl">Do not refresh the page.</p>
+              </>
+            )
+            : (
+              <p>Login failed. Try again.</p>
+            )
+          }
+        </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 

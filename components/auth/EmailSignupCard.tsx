@@ -34,7 +34,7 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
   }
 
   return (
-    <div className="card-body">
+    <div className="card-body bg-base-200 sm:bg-transparent">
       <>
         {loading && <MessageBox type="info" message="Sending email...." />}
         {data?.ok && <MessageBox type="success" message="Please check your email." />}

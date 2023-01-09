@@ -1,22 +1,15 @@
-import Head from 'next/head'
 import { SWRConfig } from 'swr'
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import Layout from '@components/Layout'
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json())
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Layout>
-    <Head>
-      <title>Oauth2.0</title>
-      <meta name="description" content="Oauth2.0 Demo" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+  return (
     <SWRConfig value={{ fetcher }}>
       <Component {...pageProps} />
     </SWRConfig>
-  </Layout>
+  )
 }
 
 export default MyApp

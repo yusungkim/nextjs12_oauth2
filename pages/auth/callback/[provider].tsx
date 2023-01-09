@@ -4,6 +4,7 @@ import { NextRouter, useRouter } from 'next/router'
 import { useEffect } from 'react'
 import useMutation from '@lib/client/useMutation'
 import useUser from '@lib/client/useUser'
+import Layout from '@components/layout/Layout'
 
 interface OAuthParamForAccessCodeToBackend {
   code: string
@@ -43,9 +44,7 @@ const OAuth: NextPage = () => {
   }, [router])
 
   // 2. get user info using access_token via backend
-  const { user, isLoading } = useUser(() => {
-    return Boolean(accessTokenData?.ok)
-  })
+  const { user, isLoading } = useUser({ triggerFetch: () => Boolean(accessTokenData?.ok) })
 
   // 3. redirect to root
   useEffect(() => {
@@ -55,22 +54,24 @@ const OAuth: NextPage = () => {
   }, [user, router, isLoading])
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="text-3xl font-semibold text-center flex flex-col gap-4 justify-center items-center">
-        {(loading || accessTokenData?.ok)
-          ? (
-            <>
-              <p>{loading ? "Authorizing... " : "Login success."}</p>
-              <progress className="progress w-full"></progress>
-              <p className="font-normal text-xl">Do not refresh the page.</p>
-            </>
-          )
-          : (
-            <p>Login failed. Try again.</p>
-          )
-        }
+    <Layout pageTitle='Confirm'>
+      <div className="flex flex-col w-full">
+        <div className="text-3xl font-semibold text-center flex flex-col gap-4 justify-center items-center">
+          {(loading || accessTokenData?.ok)
+            ? (
+              <>
+                <p>{loading ? "Authorizing... " : "Login success."}</p>
+                <progress className="progress w-full"></progress>
+                <p className="font-normal text-xl">Do not refresh the page.</p>
+              </>
+            )
+            : (
+              <p>Login failed. Try again.</p>
+            )
+          }
+        </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 

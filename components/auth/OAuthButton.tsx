@@ -2,7 +2,7 @@ import { useRouter } from "next/router"
 import { ReactNode } from "react"
 import { oauthUrl } from '@lib/client/oauth'
 import { NFC } from '@components/component'
-import Icon from "@components/icon"
+import Icon from "@components/common/Icon"
 
 interface OAuthButtonProps {
   url: string
@@ -15,7 +15,7 @@ const OAuthButton: NFC<OAuthButtonProps> = ({
 }) => {
   const router = useRouter()
   return (
-    <button onClick={() => router.push(url)} className="btn btn-primary gap-2 w-3/4 hover:btn-success">
+    <button onClick={() => router.push(url)} className="btn btn-primary gap-2 w-3/4 btn-outline">
       <div className="flex justify-between items-center px-3 w-full">
         <div className="flex gap-3">
           {children}
@@ -30,7 +30,7 @@ const OAuthButton: NFC<OAuthButtonProps> = ({
 export const OAuthGithubButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("github")}>
-      <Icon name="github" fill="white" />
+      <Icon name="github" fill="#4f4c4a" />
       <span className="text-lg">Login with Github</span>
     </OAuthButton>
   )
@@ -61,7 +61,7 @@ export const OAuthLineButton: NFC = () => {
   return (
     <OAuthButton url={oauthUrl("line")}>
       <Icon name="line" />
-      <span className="text-lg">Login with WeChat</span>
+      <span className="text-lg">Login with Line</span>
     </OAuthButton>
   )
 }

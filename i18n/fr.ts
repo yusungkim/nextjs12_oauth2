@@ -7,6 +7,23 @@ const fr = {
     LANGUAGE: "Language",
     DEV_SCHEDULE: "DevSchedule"
   },
+  PAGE: {
+    ROOT: {
+      TITLE: "Welcome"
+    },
+    PROFILE: {
+      TITLE: "Profile",
+    },
+    LOGIN: {
+      TITLE: "Login",
+    },
+    JOIN: {
+      TITLE: "Join",
+    },
+    RECIPE: {
+      TITLE: "Recipe",
+    },
+  },
   API: {
     AUTH: {
       EMAIL: {
