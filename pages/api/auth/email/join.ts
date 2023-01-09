@@ -6,8 +6,8 @@ import dbClient from "@lib/server/db"
 import { createToken } from "@lib/server/utils"
 import mail from "@sendgrid/mail"
 import loginHtmlText from "@lib/server/email"
-import { SignType } from "@components/auth/EmailSignupCard"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime"
+import { i18n } from "@lib/common/i18n"
 
 mail.setApiKey(process.env.SENDGRID_API_KEY!)
 
@@ -15,14 +15,15 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ApiResponse>
 ) {
-  const { name, email, signType } = req.body
+  const { name, email, signType, locale } = req.body
+  const localized = i18n(locale?.toString() || "en-US").i18n.API.AUTH.EMAIL.JOIN
 
   if (!email) {
-    return res.status(400).json({ ok: false, message: "Email is required." })
+    return res.status(400).json({ ok: false, message: localized.EmailRequired })
   }
 
   if (signType == "signup" && !name) {
-    return res.status(400).json({ ok: false, message: "Name is required." })
+    return res.status(400).json({ ok: false, message: localized.NameRequired })
   }
 
   let safeName = name?.toString().trim()
@@ -32,6 +33,16 @@ async function handler(
 
   if (signType == "signup") {
     try {
+      // 認証されてない状態のユーザーなら、仮登録情報を削除する
+      const alreadyRegistered = await dbClient?.user.findUnique({
+        where: { id }
+      })
+      if (alreadyRegistered && !alreadyRegistered.verified) {
+        await dbClient?.user.delete({
+          where: { id }
+        })
+      }
+
       await dbClient?.token.create({
         data: {
           payload: payload,
@@ -47,9 +58,9 @@ async function handler(
       console.log(error)
       if (error instanceof PrismaClientKnownRequestError && error.code === "P2002") {
         console.log("error.message: ", error.message)
-        return res.status(400).json({ ok: false, message: "Email is already registered. CODE=201" })
+        return res.status(400).json({ ok: false, message: localized.AlreadyRegistered + " CODE=201" })
       }
-      return res.status(500).json({ ok: false, message: "Cannot register. Try again. CODE=202" })
+      return res.status(500).json({ ok: false, message: localized.CannotRegister + " CODE=202" })
     }
 
   } else {
@@ -74,7 +85,10 @@ async function handler(
       safeName = token.user.name
     } catch (error) {
       console.log(error)
-      return res.status(500).json({ ok: false, message: "Cannot register. Try again. CODE=203" })
+      if (error instanceof PrismaClientKnownRequestError && error.code === "P2025") {
+        return res.status(500).json({ ok: false, message: localized.NotRegistered })
+      }
+      return res.status(500).json({ ok: false, message: localized.CannotRegister + "CODE=204" })
     }
 
   }

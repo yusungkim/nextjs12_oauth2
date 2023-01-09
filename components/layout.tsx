@@ -4,12 +4,16 @@ import Icon from './icon'
 import { GlobeAsiaAustraliaIcon, CalendarDaysIcon, Bars3Icon, UserCircleIcon, BookOpenIcon } from "@heroicons/react/24/solid";
 import Link from 'next/link';
 import { useLocale } from '@lib/client/useLocale';
+import useUser from '@lib/client/useUser';
+import SignoutButton from "@components/auth/SignoutButton"
+
 type LayoutProps = Required<{
   readonly children: ReactNode
 }>
 
 const Layout: NFC<LayoutProps> = ({ children }) => {
   const { i18n, locale, otherLocales, changeLocale } = useLocale();
+  const { isLoading, user } = useUser()
 
   return (
     <>
@@ -59,8 +63,20 @@ const Layout: NFC<LayoutProps> = ({ children }) => {
                 </ul>
               </li>
               {/* <UserCircleIcon className="h-9 cursor-pointe" /> */}
-              <Link href="/login" className="btn btn-info w-28 btn-outline hidden md:flex">Login</Link>
-              <Link href="/join" className="btn btn-info w-28">Join</Link>
+              {isLoading || !Boolean(user)
+                ? (
+                  <>
+                    <Link href="/login" className="btn btn-info w-28 btn-outline hidden md:flex">Login</Link>
+                    <Link href="/join" className="btn btn-info w-28">Join</Link>
+                  </>
+                )
+                : (
+                  <>
+                    <SignoutButton />
+                  </>
+                )
+              }
+
               {/* <label htmlFor="main-modal" className="btn btn-info w-28">Join</label> */}
               {/* <input type="checkbox" id="main-modal" className="modal-toggle" /> */}
             </div>

@@ -1,6 +1,7 @@
 import Button from "@components/common/Button"
 import TextInput from "@components/common/TextInput"
 import { NFC } from "@components/component"
+import { useLocale } from "@lib/client/useLocale"
 import useMutation from "@lib/client/useMutation"
 import { ApiResponse } from "@lib/server/api"
 import { useRouter } from "next/router"
@@ -11,6 +12,7 @@ interface EmailForm {
   name?: string
   email: string
   signType: string
+  locale?: string
 }
 
 export type SignType = "signup" | "signin"
@@ -19,6 +21,7 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
   const { register, handleSubmit, formState: { errors } } = useForm<EmailForm>()
   const [issueToken, { data, loading, error }] = useMutation<EmailForm, ApiResponse>("/api/auth/email/join")
   const router = useRouter()
+  const { locale } = useLocale()
 
   const onValid = (formData: EmailForm) => {
     if (loading || data?.ok) { return }
@@ -26,6 +29,7 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
     issueToken({
       ...formData,
       signType,
+      locale,
     })
   }
 
@@ -35,7 +39,10 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
         {loading && <MessageBox type="info" message="Sending email...." />}
         {data?.ok && <MessageBox type="success" message="Please check your email." />}
         {error && <MessageBox type="error" message="Something happened. Please try later." />}
-        {!data?.ok && data?.message && <MessageBox type="error" message={data?.message} />}
+        {!data?.ok
+          && data?.message
+          && <MessageBox type="error" message={data?.message} />
+        }
       </>
       {signType == "signup" &&
         <TextInput
@@ -51,7 +58,7 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
               minLength: { value: 3, message: "Names should be longer than 2 characters." },
               maxLength: { value: 30, message: "Names should be shorter than 31 characters." },
               pattern: {
-                value: /^\w.+\w$/,
+                value: /^\S.+\S$/,
                 message: "Remove space(s) at the start and/or end",
               },
             }

@@ -14,12 +14,12 @@ module.exports = {
         light: {
           ...require("daisyui/src/colors/themes")["[data-theme=light]"],
           "--btn-text-case": "",
-          info: "#3DB868",
+          info: "#61cc85",
         },
         dark: {
           ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
           "--btn-text-case": "",
-          info: "#61cc85",
+          info: "#36AE7C",
         }
       },
     ]

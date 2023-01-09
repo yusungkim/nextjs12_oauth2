@@ -91,6 +91,19 @@ const ja = {
       }
     }
   },
+  API: {
+    AUTH: {
+      EMAIL: {
+        JOIN: {
+          EmailRequired: "Emailが必要です",
+          NameRequired: "Nameが必要です",
+          AlreadyRegistered: "既に登録されています。",
+          CannotRegister: "登録できませんでした。もう一度お試しください。",
+          NotRegistered: "登録されていないメールです。先にご登録してください。",
+        }
+      }
+    }
+  }
 }
 
 export default ja
