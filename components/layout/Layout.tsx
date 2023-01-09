@@ -55,7 +55,7 @@ const Layout: NFC<LayoutProps> = ({ children, privatePage = false, pageTitle, de
 
           {/* Content */}
           <div className="drawer-content flex flex-col items-center w-full">
-            <main className="py-5 md:px-5 w-full flex flex-col items-center">
+            <main className="py-10 md:px-5 w-full flex flex-col items-center">
               {children}
             </main>
             <Footer />

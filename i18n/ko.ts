@@ -1,5 +1,5 @@
 const ko = {
-  LANGUAGE: "韓国語",
+  LANGUAGE: "한국어",
   TITLE: "Su라이프",
   NAV: {
     RECIPE: "레시피",

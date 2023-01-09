@@ -70,7 +70,7 @@ const NavBar: NFC<NavBarProps> = ({ locales }) => {
                   </div>
                 )
               }
-              <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 shadow-slate-600">
+              <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40 shadow-slate-600">
                 <li><Link href="/profile">{i18n.NAV.PROFILE}</Link></li>
                 <li><SignoutButton /></li>
               </ul>

@@ -11,7 +11,7 @@ interface LoginProps {
 const Login: NFC<LoginProps> = ({ signType = "signup" }) => {
 
   return (
-    <div className="max-w-[600px] w-full">
+    <div className="max-w-[600px] w-full py-20">
       <h1 className="text-3xl font-semibold text-center">
         {signType == "signup" ? "Join" : "Login to"} {process.env.NEXT_PUBLIC_APP_NAME}</h1>
       <div className="grid overflow-hidden card rounded-box place-items-center">
@@ -40,7 +40,7 @@ const Login: NFC<LoginProps> = ({ signType = "signup" }) => {
 
         </div>
       </div>
-      <div className="divider">OR</div>
+      <div className="divider py-10">OR</div>
       <div className="grid min-h-min w-full gap-3 place-items-center my-4">
         <OAuthLineButton />
         <OAuthGoogleButton />
