@@ -78,7 +78,7 @@ const EmailSignupCard: NFC<{ signType: SignType }> = ({ signType }) => {
       />
       <div />
       <div />
-      <Button onClick={handleSubmit(onValid)} loading={loading} title="Continue" />
+      <Button onClick={handleSubmit(onValid)} loading={loading} title={signType == "signup" ? "Create Account" : "Continue"} />
     </div>
   )
 }

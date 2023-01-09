@@ -2,7 +2,7 @@ import Head from 'next/head'
 import { SWRConfig } from 'swr'
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import Layout from '@components/layout'
+import Layout from '@components/Layout'
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json())
 

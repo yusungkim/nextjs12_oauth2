@@ -2,11 +2,14 @@ import { NFC } from "./component"
 
 export type IconName =
   | "arrow-long-right"
+  | "arrow-long-right-mini"
   | "wechat"
   | "line"
   | "github"
   | "google"
   | "facebook"
+  | "leaf"
+  | "book"
   | null
 
 export type IconSize = "S" | "M" | "L"
@@ -16,25 +19,45 @@ interface IconProps {
   size?: IconSize
   fill?: string
   stroke?: string
+  strokeWidth?: number
 }
 const Icon: NFC<IconProps> = ({
   name = "github",
   size = "M",
   fill = "currentColor",
   stroke = "none",
+  strokeWidth = 1.5
 }) => {
   const sizeClass = size === "S" ? "w-6 h-6" : ("M" ? "w-8 h-8" : "w-10 h-10")
 
   switch (name) {
     case "arrow-long-right":
       return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" className={sizeClass} stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={strokeWidth} className={sizeClass} stroke={stroke} fill={fill}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+        </svg>
+      )
+    case "arrow-long-right-mini":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" strokeWidth={strokeWidth} className={sizeClass} stroke={stroke} fill={fill}>
+          <path fillRule="evenodd" d="M5 10a.75.75 0 01.75-.75h6.638L10.23 7.29a.75.75 0 111.04-1.08l3.5 3.25a.75.75 0 010 1.08l-3.5 3.25a.75.75 0 11-1.04-1.08l2.158-1.96H5.75A.75.75 0 015 10z" clipRule="evenodd" />
+        </svg>
+      )
+    case "book":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" strokeWidth={strokeWidth} className={sizeClass} stroke={stroke} fill={fill}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
         </svg>
       )
     case "wechat":
       return (
         <img src={`/assets/3rd/wechat_${size}.png`} className={sizeClass} alt="" />
+      )
+    case "leaf":
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" strokeWidth={strokeWidth} className={sizeClass} stroke={stroke} fill={fill}>
+          <path d="M 30.648 90 h -4.666 c -0.276 0 -0.54 -0.114 -0.729 -0.315 c -0.189 -0.202 -0.287 -0.473 -0.269 -0.748 c 1.473 -23.129 7.78 -37.706 23.516 -52.984 c -11.987 6.803 -23.657 18.781 -25.661 35.247 c -0.051 0.42 -0.361 0.763 -0.774 0.854 c -0.414 0.094 -0.84 -0.086 -1.065 -0.443 c -8.808 -14.02 -8.505 -26.712 0.952 -39.944 c 5.454 -7.272 13.28 -11.279 20.185 -14.815 c 8.346 -4.273 15.554 -7.964 17.098 -16.04 c 0.078 -0.407 0.398 -0.723 0.807 -0.796 c 0.407 -0.073 0.818 0.113 1.032 0.467 c 10.854 17.977 19.798 35.828 10.159 56.542 c -7.694 13.752 -20.459 20.112 -37.994 18.96 c -1.01 4.324 -1.531 8.595 -1.59 13.028 C 31.641 89.561 31.195 90 30.648 90 z M 27.052 88 h 2.617 c 0.129 -4.515 0.728 -8.881 1.825 -13.313 c 0.118 -0.475 0.554 -0.793 1.049 -0.757 c 17.367 1.366 29.437 -4.464 36.911 -17.814 c 8.859 -19.047 1.472 -35.189 -8.879 -52.575 c -2.563 7.429 -9.851 11.161 -17.526 15.091 c -7.04 3.604 -14.319 7.332 -19.483 14.216 c -8.376 11.72 -9.128 23.011 -2.278 35.324 c 3.534 -18.634 18.924 -31.329 32.625 -37.12 c 0.452 -0.192 0.977 -0.027 1.237 0.39 c 0.261 0.416 0.181 0.959 -0.188 1.283 C 36.16 49.192 28.777 63.753 27.052 88 z" strokeLinecap="round" />
+        </svg>
       )
     case "line":
       return (
