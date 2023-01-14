@@ -1,7 +1,7 @@
-import {BookOpenIcon, CalendarDaysIcon, GlobeAsiaAustraliaIcon, UserCircleIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
-import { NFC } from "../component";
-import { useLocale } from '@lib/client/useLocale';
+import { BookOpenIcon, CalendarDaysIcon, GlobeAsiaAustraliaIcon, UserCircleIcon } from "@heroicons/react/24/solid"
+import Link from "next/link"
+import { NFC } from "../component"
+import { useLocale } from '@lib/client/useLocale'
 
 interface DrawerProps {
   locales: ReturnType<typeof useLocale>
@@ -21,7 +21,7 @@ const Drawer: NFC<DrawerProps> = ({
         <li><Link href="/profile"><UserCircleIcon className="h-6 w-6" />{i18n.NAV.PROFILE}</Link></li>
         <li className="dropdown dropdown-right dropdown-hover">
           <label><GlobeAsiaAustraliaIcon className="h-6 w-6" />{i18n.NAV.LANGUAGE} - {i18n.LANGUAGE}</label>
-          <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 shadow-slate-600">
+          <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-md w-32 shadow-slate-600">
             {otherLocales?.map((other, idx) => (
               <li key={idx} onClick={() => changeLocale(other.locale)}>
                 <span >{other.name}</span>
@@ -35,4 +35,4 @@ const Drawer: NFC<DrawerProps> = ({
   )
 }
 
-export default Drawer;
+export default Drawer

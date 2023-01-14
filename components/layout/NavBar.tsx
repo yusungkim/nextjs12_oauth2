@@ -5,6 +5,7 @@ import Icon from "../common/Icon"
 import { useLocale } from '@lib/client/useLocale'
 import useUser from '@lib/client/useUser'
 import SignoutButton from "../auth/SignoutButton"
+import ActiveLink from "@components/common/ActiveLink"
 
 interface NavBarProps {
   locales: ReturnType<typeof useLocale>
@@ -24,10 +25,22 @@ const NavBar: NFC<NavBarProps> = ({ locales }) => {
       {/* Middle - AppIcon */}
       <div className="flex justify-center md:justify-start items-center py-2 flex-grow gap-6">
         <Link href="/"><Icon name="leaf" stroke="#3DB868" /></Link>
-        <ul className="hidden md:flex gap-6">
-          <li><Link href="/recipes">{i18n.NAV.RECIPE}</Link></li>
-          <li><Link href="/profile">{i18n.NAV.PROFILE}</Link></li>
-          <li><Link href="/development">{i18n.NAV.DEV_SCHEDULE}</Link></li>
+        <ul className="hidden md:flex font-normal">
+          <li>
+            <ActiveLink href="/recipes">
+              <span className="pb-1 px-4">{i18n.NAV.RECIPE}</span>
+            </ActiveLink>
+          </li>
+          <li>
+            <ActiveLink href="/profile">
+              <span className="pb-1 px-4">{i18n.NAV.PROFILE}</span>
+            </ActiveLink>
+          </li>
+          <li>
+            <ActiveLink href="/development">
+              <span className="pb-1 px-4">{i18n.NAV.DEV_SCHEDULE}</span>
+            </ActiveLink>
+          </li>
         </ul>
       </div>
 
@@ -35,7 +48,7 @@ const NavBar: NFC<NavBarProps> = ({ locales }) => {
       <div className="flex items-center space-x-4 justify-end text-gray-500">
         <li className="dropdown dropdown-end dropdown-hover hidden md:block">
           <label>{i18n.LANGUAGE}</label>
-          <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32 shadow-slate-600">
+          <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-md w-32 shadow-slate-600">
             {otherLocales?.map((other, idx) => (
               <li key={idx} onClick={() => changeLocale(other.locale)}>
                 <span >{other.name}</span>
