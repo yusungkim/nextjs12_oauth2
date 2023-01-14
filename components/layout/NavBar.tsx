@@ -1,10 +1,10 @@
-import { Bars3Icon } from "@heroicons/react/24/solid";
-import Link from "next/link";
-import { NFC } from "../component";
-import Icon from "../common/Icon";
-import { useLocale } from '@lib/client/useLocale';
-import useUser from '@lib/client/useUser';
-import SignoutButton from "../auth/SignoutButton";
+import { Bars3Icon } from "@heroicons/react/24/solid"
+import Link from "next/link"
+import { NFC } from "../component"
+import Icon from "../common/Icon"
+import { useLocale } from '@lib/client/useLocale'
+import useUser from '@lib/client/useUser'
+import SignoutButton from "../auth/SignoutButton"
 
 interface NavBarProps {
   locales: ReturnType<typeof useLocale>
@@ -12,7 +12,7 @@ interface NavBarProps {
 
 const NavBar: NFC<NavBarProps> = ({ locales }) => {
   const { i18n, otherLocales, changeLocale } = locales
-  const { isLoading, user } = useUser({})
+  const { isLoading, user } = useUser()
 
   return (
     <nav className="navbar w-full top-0 z-50 flex items-center shadow-md py-3 md:px-10">
@@ -82,4 +82,4 @@ const NavBar: NFC<NavBarProps> = ({ locales }) => {
   )
 }
 
-export default NavBar;
+export default NavBar

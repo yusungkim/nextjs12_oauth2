@@ -15,7 +15,7 @@ const Confirm: NextPage = () => {
 
   const [confirm, { data, loading }] = useMutation<ConfirmTokenForm, ApiResponse>("/api/auth/email/confirm")
 
-  const { user } = useUser({ triggerFetch: () => Boolean(data?.ok) })
+  const { user, revalidateUser } = useUser()
 
   useEffect(() => {
     if (router.isReady) {
@@ -23,6 +23,12 @@ const Confirm: NextPage = () => {
       confirm({ token })
     }
   }, [router])
+
+  useEffect(() => {
+    if (data?.ok && revalidateUser) {
+      revalidateUser()
+    }
+  }, [revalidateUser, data])
 
   // redirect if login success
   useEffect(() => {

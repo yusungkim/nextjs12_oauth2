@@ -1,30 +1,29 @@
-import useSWR from "swr";
-import { UserResponse } from "@api/auth/me";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import useSWR, { KeyedMutator } from "swr"
+import { UserResponse } from "@api/auth/me"
+import { useEffect } from "react"
+import { useRouter } from "next/router"
 
 export interface User {
-  name: string;
-  avatar_url: string | null;
+  name: string
+  avatar_url: string | null
 }
 
 interface UseUserState {
-  isLoading: boolean;
+  isLoading: boolean
   user?: User
+  revalidateUser: KeyedMutator<UserResponse>
 }
 
 type TriggerFetch = () => Boolean
 interface UseUserProps {
-  triggerFetch?: TriggerFetch,
-  privatePage?: boolean,
+  privatePage?: boolean
 }
 
 const useUser = ({
-  triggerFetch = () => { return true },
   privatePage = false,
-}: UseUserProps): UseUserState => {
+}: UseUserProps = { privatePage: false }): UseUserState => {
 
-  const { data, isLoading } = useSWR<UserResponse>(triggerFetch() ? '/api/auth/me' : null);
+  const { data, isLoading, mutate: revalidateUser } = useSWR<UserResponse>('/api/auth/me')
 
   const { push } = useRouter()
 
@@ -34,7 +33,7 @@ const useUser = ({
     }
   }, [data, privatePage, push])
 
-  return { isLoading, user: data?.user }
-};
+  return { isLoading, user: data?.user, revalidateUser }
+}
 
-export default useUser;
+export default useUser

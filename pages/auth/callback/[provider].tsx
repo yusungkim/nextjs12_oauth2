@@ -34,7 +34,7 @@ const getProviderAndCode = (router: NextRouter): OAuthParamForAccessCodeToBacken
 const OAuth: NextPage = () => {
   const router = useRouter()
 
-  const [exchangeAccessToken, { data: accessTokenData, loading, error }] = useMutation<OAuthParamForAccessCodeToBackend, ApiResponse>("/api/auth/oauth")
+  const [exchangeAccessToken, { data: accessTokenData, loading }] = useMutation<OAuthParamForAccessCodeToBackend, ApiResponse>("/api/auth/oauth")
 
   // 1. get and set access_token from github via backend
   useEffect(() => {
@@ -43,8 +43,15 @@ const OAuth: NextPage = () => {
     }
   }, [router])
 
+  const { user, isLoading, revalidateUser } = useUser()
+
   // 2. get user info using access_token via backend
-  const { user, isLoading } = useUser({ triggerFetch: () => Boolean(accessTokenData?.ok) })
+  useEffect(() => {
+    if (accessTokenData && revalidateUser) {
+      revalidateUser()
+    }
+  }, [accessTokenData, revalidateUser])
+
 
   // 3. redirect to root
   useEffect(() => {
