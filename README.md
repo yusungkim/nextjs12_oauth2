@@ -24,6 +24,12 @@
 * oauth / useUser / github provider / google provider
 * signout
 
+[init_auth](https://github.com/yusungkim/nextjs12_oauth2/releases/tag/init_auth)
+
+* fixed login behavior
+* oauth
+* email login
+
 ## Develop
 
 ### Local up
