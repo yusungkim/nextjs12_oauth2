@@ -64,18 +64,20 @@ const OAuth: NextPage = () => {
     <Layout pageTitle='Confirm'>
       <div className="flex flex-col w-full">
         <div className="text-3xl font-semibold text-center flex flex-col gap-4 justify-center items-center">
-          {(loading || accessTokenData?.ok)
-            ? (
-              <>
-                <p>{loading ? "Authorizing... " : "Login success."}</p>
-                <progress className="progress w-full"></progress>
-                <p className="font-normal text-xl">Do not refresh the page.</p>
-              </>
-            )
-            : (
-              <p>Login failed. Try again.</p>
-            )
-          }
+          <div className="artboard phone-1 flex flex-col justify-center items-center gap-4">
+            {(loading || accessTokenData?.ok)
+              ? (
+                <>
+                  <p>{loading ? "Authorizing... " : "Login success."}</p>
+                  <progress className="progress w-full"></progress>
+                  <p className="font-normal text-xl">Do not refresh the page.</p>
+                </>
+              )
+              : (
+                <p>Login failed. Try again.</p>
+              )
+            }
+          </div>
         </div>
       </div>
     </Layout>

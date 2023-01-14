@@ -31,6 +31,7 @@ const ja = {
           EmailRequired: "Emailが必要です",
           NameRequired: "Nameが必要です",
           AlreadyRegistered: "既に登録されています。",
+          TooManyTries: "しばらく待ってからもう一度お試しください。",
           CannotRegister: "登録できませんでした。もう一度お試しください。",
           NotRegistered: "登録されていないメールです。先にご登録してください。",
         }

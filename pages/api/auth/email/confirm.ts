@@ -3,13 +3,8 @@ import withMethodGuard from "@lib/server/withMethodGuard"
 import { withApiSession } from "@lib/server/withSession"
 import { ApiResponse } from "@lib/server/api"
 import dbClient from "@lib/server/db"
-import { currentUnixTime } from "@lib/server/utils"
+import { currentUnixTime, validateToken } from "@lib/server/utils"
 import { saveUserToSession } from "@lib/server/session"
-
-const OAUTH_PROVIDERS = ["google", "github", "discord"]
-export function validProvider(provider: string) {
-  return OAUTH_PROVIDERS.includes(provider)
-}
 
 interface OAuthParamForAccessCode {
   client_id: string
@@ -65,8 +60,8 @@ async function handler(
       return res.status(400).json({ ok: false, message: 'Login failed (Invalid token). Please try again from the beginning. CODE:003' })
     }
 
-    if (dbToken.expireAt > currentUnixTime()) {
-      await clearTokens(dbToken.user.id)
+    if (!validateToken(dbToken.expireAt)) {
+      console.log("expired token")
       return res.status(400).json({ ok: false, message: 'Login failed (Token expired). Please try again from the beginning. CODE:004' })
     }
 

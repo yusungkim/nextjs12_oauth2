@@ -1,14 +1,14 @@
 // 1. get access token from provider if there is no access_token provided.
 // 2. create new session using cookie
 
-import type { NextApiRequest, NextApiResponse } from "next";
-import withMethodGuard from "@lib/server/withMethodGuard";
-import { withApiSession } from "@lib/server/withSession";
-import { ApiResponse } from "@lib/server/api";
-import { fetchUserInfoFromProvider, oauthMapForToken, OAuthMapForToken, registerIfNewUser } from "@lib/server/oauth";
+import type { NextApiRequest, NextApiResponse } from "next"
+import withMethodGuard from "@lib/server/withMethodGuard"
+import { withApiSession } from "@lib/server/withSession"
+import { ApiResponse } from "@lib/server/api"
+import { fetchUserInfoFromProvider, oauthMapForToken, OAuthMapForToken, registerIfNewUser } from "@lib/server/oauth"
 
 export const OAUTH_PROVIDERS = ["google", "github", "line", "discord", "facebook"]
-export function validProvider(provider: string) {
+export function validOauthProvider(provider: string) {
   const isValid = OAUTH_PROVIDERS.includes(provider)
   if (!isValid) {
     console.log("Not valid provider: ", provider)
@@ -25,11 +25,11 @@ interface OAuthParamForAccessCode {
 }
 
 async function fetchWithFormUrlEncoded(url: string, headers: HeadersInit, jsonData: OAuthParamForAccessCode): Promise<Response> {
-  const formData = new URLSearchParams();
+  const formData = new URLSearchParams()
   Object
     .keys(jsonData)
     .map(key => key as keyof (OAuthParamForAccessCode))
-    .forEach(key => formData.append(key, jsonData[key]));
+    .forEach(key => formData.append(key, jsonData[key]))
 
   return await fetch(url, {
     method: "POST",
@@ -47,7 +47,7 @@ async function handler(
 ) {
   const { provider, code } = req.body
 
-  if (!validProvider(provider)) {
+  if (!validOauthProvider(provider)) {
     return res.status(400).json({ ok: false, message: `Auth provider ${provider} is not allowed.` })
   }
 
@@ -112,4 +112,4 @@ async function handler(
   }
 }
 
-export default withApiSession(withMethodGuard({ methods: ["POST"], handler }));
+export default withApiSession(withMethodGuard({ methods: ["POST"], handler }))

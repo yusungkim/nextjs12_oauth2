@@ -3,7 +3,7 @@ import withMethodGuard from "@lib/server/withMethodGuard"
 import { UserInfo, withApiSession } from "@lib/server/withSession"
 import { ApiResponse } from "@lib/server/api"
 import { currentUnixTime } from "@lib/server/utils"
-import { validProvider } from "@api/auth/oauth"
+import { validOauthProvider } from "@api/auth/oauth"
 import { fetchUserInfoFromProvider, OAuthMapForToken } from "@lib/server/oauth"
 import { saveUserToSession } from "@lib/server/session"
 
@@ -43,7 +43,7 @@ async function handler(
   }
 
   const { access_token, provider: providerString } = auth
-  if (!validProvider(providerString)) {
+  if (!validOauthProvider(providerString)) {
     console.log(`Auth provider ${providerString} is not allowed.`)
     return res.status(400).json({ ok: false, message: "Authorization Failed. Try again." })
   }

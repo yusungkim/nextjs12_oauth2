@@ -3,7 +3,7 @@ import withMethodGuard from "@lib/server/withMethodGuard"
 import { withApiSession } from "@lib/server/withSession"
 import { ApiResponse } from "@lib/server/api"
 import dbClient from "@lib/server/db"
-import { createToken } from "@lib/server/utils"
+import { createToken, currentUnixTime } from "@lib/server/utils"
 import mail from "@sendgrid/mail"
 import loginHtmlText from "@lib/server/email"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime"
@@ -29,7 +29,25 @@ async function handler(
   let safeName = name?.toString().trim()
   const safeEmail = email.toString().trim()
   const id = `email/${safeEmail}`
-  const payload = createToken("email")
+
+  // check token creation limit
+  const tokenIssued = await dbClient?.token.aggregate({
+    where: {
+      userId: id,
+      expireAt: {
+        gt: currentUnixTime()
+      }
+    },
+    _count: {
+      userId: true
+    },
+  })
+
+  if (tokenIssued._count.userId > 5) {
+    return res.status(400).json({ ok: false, message: localized.TooManyTries + " CODE=203" })
+  }
+
+  const tokenInfo = createToken({ provider: "email", expireIn: 60 * 60 }) // valid within 1 hour
 
   if (signType == "signup") {
     try {
@@ -45,7 +63,7 @@ async function handler(
 
       await dbClient?.token.create({
         data: {
-          payload: payload,
+          ...tokenInfo,
           user: {
             create: {
               id,
@@ -67,7 +85,7 @@ async function handler(
     try {
       const token = await dbClient?.token.create({
         data: {
-          payload: payload,
+          ...tokenInfo,
           user: {
             connect: {
               id,
@@ -100,7 +118,7 @@ async function handler(
     html: loginHtmlText(
       process.env.APP_NAME,
       safeName,
-      `http://localhost:3000/auth/callback/confirm?token=${payload}`
+      `http://localhost:3000/auth/callback/confirm?token=${tokenInfo.payload}`
     ),
   })
 

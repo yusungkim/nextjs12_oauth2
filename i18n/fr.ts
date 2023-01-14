@@ -31,6 +31,7 @@ const fr = {
           EmailRequired: "Email is required",
           NameRequired: "Name is required",
           AlreadyRegistered: "Email is already registered",
+          TooManyTries: "Too many retries, please wait a little bit and try again.",
           CannotRegister: "Cannot register. Try again.",
           NotRegistered: "You are not registered yet. Please join us first.",
         }
